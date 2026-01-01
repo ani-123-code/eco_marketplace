@@ -1,8 +1,8 @@
-const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
+const nodemailer = require('nodemailer');
 
-// Get OAuth2 access token
-const getAccessToken = async () => {
+// Get OAuth2 client and access token
+const getOAuth2Client = async () => {
   try {
     const oauth2Client = new google.auth.OAuth2(
       process.env.GMAIL_CLIENT_ID,
@@ -14,45 +14,58 @@ const getAccessToken = async () => {
       refresh_token: process.env.GMAIL_REFRESH_TOKEN
     });
 
-    const accessToken = await oauth2Client.getAccessToken();
-    return accessToken;
+    return oauth2Client;
   } catch (error) {
-    console.error('Error getting OAuth2 access token:', error);
+    console.error('Error creating OAuth2 client:', error);
     throw error;
   }
 };
 
-// Create reusable transporter with Gmail OAuth2
-const createTransporter = async () => {
-  // Check if using Gmail OAuth2 (from .env lines 24-30)
-  const gmailClientId = process.env.GMAIL_CLIENT_ID;
-  const gmailClientSecret = process.env.GMAIL_CLIENT_SECRET;
-  const gmailRefreshToken = process.env.GMAIL_REFRESH_TOKEN;
-  const gmailUser = process.env.GMAIL_USER || process.env.EMAIL_USER;
-  
-  // Use Gmail OAuth2 if credentials are available
-  if (gmailClientId && gmailClientSecret && gmailRefreshToken && gmailUser) {
-    try {
-      const accessToken = await getAccessToken();
-      
-      return nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          type: 'OAuth2',
-          user: gmailUser,
-          clientId: gmailClientId,
-          clientSecret: gmailClientSecret,
-          refreshToken: gmailRefreshToken,
-          accessToken: accessToken
-        }
-      });
-    } catch (error) {
-      console.error('Error creating OAuth2 transporter:', error);
-      throw error;
-    }
+// Send email using Gmail API (HTTPS) - No SMTP connection
+const sendEmailViaGmailAPI = async (to, subject, html, text) => {
+  try {
+    const oauth2Client = await getOAuth2Client();
+    const gmail = google.gmail({ version: 'v1', auth: oauth2Client });
+    const gmailUser = process.env.GMAIL_USER || process.env.EMAIL_USER;
+    const senderName = process.env.EMAIL_SENDER_NAME || 'Eco Marketplace';
+
+    // Create email message
+    const messageParts = [
+      `From: "${senderName}" <${gmailUser}>`,
+      `To: ${to}`,
+      `Subject: ${subject}`,
+      'Content-Type: text/html; charset=utf-8',
+      '',
+      html
+    ];
+
+    const message = messageParts.join('\n');
+    
+    // Encode message in base64url format
+    const encodedMessage = Buffer.from(message)
+      .toString('base64')
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+
+    // Send email via Gmail API
+    const response = await gmail.users.messages.send({
+      userId: 'me',
+      requestBody: {
+        raw: encodedMessage
+      }
+    });
+
+    console.log('Email sent successfully via Gmail API (HTTPS):', response.data.id);
+    return { success: true, messageId: response.data.id };
+  } catch (error) {
+    console.error('Error sending email via Gmail API:', error);
+    throw error;
   }
-  
-  // Fallback to basic auth if OAuth2 not configured
+};
+
+// Fallback: Create SMTP transporter (only if Gmail API fails or not configured)
+const createSMTPTransporter = async () => {
   const emailService = process.env.EMAIL_SERVICE;
   const emailHost = process.env.EMAIL_HOST;
   const emailPort = process.env.EMAIL_PORT || 465;
@@ -68,7 +81,10 @@ const createTransporter = async () => {
       auth: {
         user: emailUser,
         pass: emailPassword
-      }
+      },
+      connectionTimeout: 10000, // 10 seconds timeout
+      greetingTimeout: 10000,
+      socketTimeout: 10000
     });
   }
   
@@ -82,14 +98,16 @@ const createTransporter = async () => {
         user: emailUser,
         pass: emailPassword
       },
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
       tls: {
         rejectUnauthorized: process.env.EMAIL_REJECT_UNAUTHORIZED !== 'false'
       }
     });
   }
   
-  // Default fallback
-  throw new Error('Email configuration not found. Please set Gmail OAuth2 credentials or EMAIL_HOST/EMAIL_SERVICE in .env file');
+  throw new Error('SMTP configuration not found');
 };
 
 // Email templates
@@ -301,7 +319,7 @@ const emailTemplates = {
   }
 };
 
-// Send email function
+// Send email function - Uses Gmail API (HTTPS) by default, falls back to SMTP if needed
 const sendEmail = async (to, templateName, data) => {
   try {
     // Check if Gmail OAuth2 is configured (from .env lines 24-30)
@@ -316,46 +334,55 @@ const sendEmail = async (to, templateName, data) => {
     const emailHost = process.env.EMAIL_HOST;
     const emailService = process.env.EMAIL_SERVICE;
     
-    // Validate OAuth2 configuration
-    if (gmailClientId && gmailClientSecret && gmailRefreshToken) {
-      if (!gmailUser) {
-        console.warn('Gmail OAuth2 configured but GMAIL_USER not set.');
-        return { success: false, message: 'GMAIL_USER required for OAuth2' };
-      }
-    } else if (!emailUser || (!emailPassword && !emailHost && !emailService)) {
-      console.warn('Email service not configured. Please set Gmail OAuth2 credentials or basic auth.');
-      return { success: false, message: 'Email service not configured' };
-    }
-
-    // Create transporter (will use OAuth2 if available, otherwise fallback to basic auth)
-    const transporter = await createTransporter();
+    // Get email template
     const template = emailTemplates[templateName];
-    
     if (!template) {
       throw new Error(`Email template "${templateName}" not found`);
     }
 
     const emailContent = template(data);
     
-    // Get sender name and email from env
-    const senderName = process.env.EMAIL_SENDER_NAME || 'Eco Marketplace';
-    const senderEmail = gmailUser || emailUser;
-    
-    if (!senderEmail) {
-      throw new Error('Sender email not configured');
+    // Priority 1: Use Gmail API (HTTPS) - No SMTP connection needed
+    if (gmailClientId && gmailClientSecret && gmailRefreshToken && gmailUser) {
+      try {
+        console.log('Attempting to send email via Gmail API (HTTPS)...');
+        const result = await sendEmailViaGmailAPI(to, emailContent.subject, emailContent.html, emailContent.text);
+        return result;
+      } catch (apiError) {
+        console.error('Gmail API failed, trying SMTP fallback:', apiError.message);
+        // Fall through to SMTP fallback
+      }
     }
     
-    const mailOptions = {
-      from: `"${senderName}" <${senderEmail}>`,
-      to: to,
-      subject: emailContent.subject,
-      html: emailContent.html,
-      text: emailContent.text
-    };
+    // Priority 2: Fallback to SMTP (if Gmail API not configured or failed)
+    if (emailUser && (emailPassword || emailHost || emailService)) {
+      try {
+        console.log('Using SMTP fallback...');
+        const transporter = await createSMTPTransporter();
+        const senderName = process.env.EMAIL_SENDER_NAME || 'Eco Marketplace';
+        const senderEmail = gmailUser || emailUser;
+        
+        const mailOptions = {
+          from: `"${senderName}" <${senderEmail}>`,
+          to: to,
+          subject: emailContent.subject,
+          html: emailContent.html,
+          text: emailContent.text
+        };
 
-    const info = await transporter.sendMail(mailOptions);
-    console.log('Email sent successfully via Gmail OAuth2:', info.messageId);
-    return { success: true, messageId: info.messageId };
+        const info = await transporter.sendMail(mailOptions);
+        console.log('Email sent successfully via SMTP:', info.messageId);
+        return { success: true, messageId: info.messageId };
+      } catch (smtpError) {
+        console.error('SMTP also failed:', smtpError.message);
+        throw smtpError;
+      }
+    }
+    
+    // No configuration found
+    console.warn('Email service not configured. Please set Gmail OAuth2 credentials or basic auth.');
+    return { success: false, message: 'Email service not configured' };
+    
   } catch (error) {
     console.error('Error sending email:', error);
     return { success: false, error: error.message };
