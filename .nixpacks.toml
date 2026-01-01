@@ -1,0 +1,21 @@
+[phases.setup]
+nixPkgs = ["nodejs-18_x", "npm-9"]
+
+[phases.install]
+cmds = [
+  "npm install",
+  "cd server && npm install",
+  "cd ../ecotrade && npm install"
+]
+
+[phases.build]
+cmds = [
+  "cd ecotrade && npm run build"
+]
+
+[start]
+cmd = "cd server && node server.js"
+
+[providers]
+railway = true
+

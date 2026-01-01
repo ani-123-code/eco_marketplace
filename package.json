@@ -1,0 +1,20 @@
+{
+  "name": "eco-marketplace",
+  "version": "1.0.0",
+  "description": "Eco Marketplace - B2B PCR Materials Platform",
+  "private": true,
+  "scripts": {
+    "install:all": "npm install && cd server && npm install && cd ../ecotrade && npm install",
+    "build": "cd ecotrade && npm install && npm run build",
+    "start": "cd server && node server.js",
+    "dev": "concurrently \"cd server && npm run dev\" \"cd ecotrade && npm run dev\""
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+
