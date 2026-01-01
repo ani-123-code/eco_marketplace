@@ -98,14 +98,21 @@ if (process.env.NODE_ENV === 'production') {
     path.join(__dirname, '../ecotrade/dist'),
     path.join(__dirname, '../../ecotrade/dist'),
     path.join(process.cwd(), 'ecotrade/dist'),
-    path.join(process.cwd(), 'dist')
+    path.join(process.cwd(), 'dist'),
+    path.join('/app', 'ecotrade/dist'),
+    path.join('/app', 'dist')
   ];
   
   let buildPath = null;
   for (const possiblePath of possiblePaths) {
-    if (fs.existsSync(possiblePath)) {
-      buildPath = possiblePath;
-      break;
+    try {
+      if (fs.existsSync(possiblePath)) {
+        buildPath = possiblePath;
+        console.log(`📦 Found frontend build at: ${buildPath}`);
+        break;
+      }
+    } catch (err) {
+      // Continue to next path
     }
   }
   
@@ -113,21 +120,37 @@ if (process.env.NODE_ENV === 'production') {
     console.log(`📦 Serving static files from: ${buildPath}`);
     
     // Serve static files
-    app.use(express.static(buildPath));
+    app.use(express.static(buildPath, {
+      maxAge: '1y',
+      etag: true
+    }));
     
     // Handle React routing, return all requests to React app
-    app.get('*', (req, res) => {
+    // This must be BEFORE the catch-all error handler
+    app.get('*', (req, res, next) => {
       // Don't serve React app for API routes
       if (req.path.startsWith('/api/')) {
-        return res.status(404).json({
-          message: 'API route not found',
-          path: req.originalUrl
-        });
+        return next(); // Let it fall through to 404 handler
       }
-      res.sendFile(path.join(buildPath, 'index.html'));
+      res.sendFile(path.join(buildPath, 'index.html'), (err) => {
+        if (err) {
+          console.error('Error serving index.html:', err);
+          next(err);
+        }
+      });
     });
   } else {
     console.warn('⚠️  Frontend build not found. API-only mode.');
+    console.warn('   Current working directory:', process.cwd());
+    console.warn('   __dirname:', __dirname);
+    
+    // List directory contents for debugging
+    try {
+      const cwdContents = fs.readdirSync(process.cwd());
+      console.warn('   CWD contents:', cwdContents);
+    } catch (e) {
+      console.warn('   Could not read CWD');
+    }
   }
 } else {
   // Development mode - just show API info
@@ -149,6 +172,7 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
+// Error handler
 app.use((err, req, res, next) => {
   console.error('Error occurred:', err.stack);
 
@@ -158,11 +182,22 @@ app.use((err, req, res, next) => {
   });
 });
 
+// 404 handler for API routes only (if frontend not found or API route doesn't exist)
 app.use('*', (req, res) => {
-  res.status(404).json({
-    message: 'Route not found',
-    path: req.originalUrl
-  });
+  if (req.path.startsWith('/api/')) {
+    res.status(404).json({
+      message: 'API route not found',
+      path: req.originalUrl
+    });
+  } else {
+    // If frontend build exists, this shouldn't be reached
+    // If frontend build doesn't exist, show helpful message
+    res.status(404).json({
+      message: 'Route not found',
+      path: req.originalUrl,
+      note: 'Frontend may not be built or deployed. Check build logs.'
+    });
+  }
 });
 
 const PORT = process.env.PORT || 5000;

@@ -3,19 +3,17 @@ nixPkgs = ["nodejs-18_x", "npm-9"]
 
 [phases.install]
 cmds = [
-  "npm install",
-  "cd server && npm install",
-  "cd ../ecotrade && npm install"
+  "npm install || true",
+  "if [ -d 'server' ]; then cd server && npm install && cd ..; fi",
+  "if [ -d 'ecotrade' ]; then cd ecotrade && npm install && cd ..; fi"
 ]
 
 [phases.build]
 cmds = [
-  "cd ecotrade && npm run build"
+  "if [ -d 'ecotrade' ]; then cd ecotrade && npm run build && cd ..; fi",
+  "if [ -d 'server' ]; then cd server && npm install && cd ..; fi"
 ]
 
 [start]
-cmd = "cd server && node server.js"
-
-[providers]
-railway = true
+cmd = "if [ -d 'server' ]; then cd server && node server.js; else echo 'Server directory not found'; exit 1; fi"
 

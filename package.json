@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "install:all": "npm install && cd server && npm install && cd ../ecotrade && npm install",
-    "build": "cd ecotrade && npm install && npm run build",
-    "start": "cd server && node server.js",
+    "build": "if [ -d 'ecotrade' ]; then cd ecotrade && npm install && npm run build && cd ..; fi && if [ -d 'server' ]; then cd server && npm install && cd ..; fi",
+    "start": "if [ -d 'server' ]; then cd server && node server.js; else echo 'Error: server directory not found'; exit 1; fi",
     "dev": "concurrently \"cd server && npm run dev\" \"cd ecotrade && npm run dev\""
   },
   "engines": {
