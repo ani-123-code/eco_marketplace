@@ -2,10 +2,10 @@ import axios from './axios';
 
 export const uploadAPI = {
   // Upload single image file
-  uploadImage: async (file) => {
+  uploadImage: async (file, subfolder = 'materials') => {
     const formData = new FormData();
     formData.append('image', file);
-    formData.append('subfolder', 'materials');
+    formData.append('subfolder', subfolder);
 
     const { data } = await axios.post('/api/upload/image', formData, {
       headers: {
@@ -16,12 +16,12 @@ export const uploadAPI = {
   },
 
   // Upload multiple image files
-  uploadImages: async (files) => {
+  uploadImages: async (files, subfolder = 'materials') => {
     const formData = new FormData();
     files.forEach((file) => {
       formData.append('images', file);
     });
-    formData.append('subfolder', 'materials');
+    formData.append('subfolder', subfolder);
 
     const { data } = await axios.post('/api/upload/images', formData, {
       headers: {

@@ -361,7 +361,13 @@ export default function AdminEcoMaterials() {
                     required
                     min="0"
                     value={formData.availableQuantity}
-                    onChange={(e) => setFormData({ ...formData, availableQuantity: parseFloat(e.target.value) })}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFormData({ 
+                        ...formData, 
+                        availableQuantity: value === '' ? '' : (parseFloat(value) || 0)
+                      });
+                    }}
                     className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>
@@ -385,7 +391,13 @@ export default function AdminEcoMaterials() {
                     required
                     min="1"
                     value={formData.minimumOrderQuantity}
-                    onChange={(e) => setFormData({ ...formData, minimumOrderQuantity: parseInt(e.target.value) })}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setFormData({ 
+                        ...formData, 
+                        minimumOrderQuantity: value === '' ? '' : (parseInt(value) || 1)
+                      });
+                    }}
                     className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>

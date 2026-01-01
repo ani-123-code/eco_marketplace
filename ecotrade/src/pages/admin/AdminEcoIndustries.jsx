@@ -95,7 +95,8 @@ export default function AdminEcoIndustries() {
 
     setUploading(true);
     try {
-      const response = await uploadAPI.uploadImage(file);
+      // Use 'industries' subfolder for industry icons
+      const response = await uploadAPI.uploadImage(file, 'industries');
       if (response.success && response.imageUrl) {
         setFormData({ ...formData, icon: response.imageUrl });
       } else {
@@ -271,7 +272,13 @@ export default function AdminEcoIndustries() {
                 <input
                   type="number"
                   value={formData.displayOrder}
-                  onChange={(e) => setFormData({ ...formData, displayOrder: parseInt(e.target.value) })}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setFormData({ 
+                      ...formData, 
+                      displayOrder: value === '' ? '' : (parseInt(value) || 0)
+                    });
+                  }}
                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
                 />
               </div>
