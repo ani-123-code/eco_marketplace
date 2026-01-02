@@ -36,26 +36,18 @@ export default function AdminEcoIndustries() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      let response;
       if (editingId) {
-        response = await industryAPI.update(editingId, formData);
+        await industryAPI.update(editingId, formData);
       } else {
-        response = await industryAPI.create(formData);
+        await industryAPI.create(formData);
       }
-      
-      if (response && response.success) {
-        setShowModal(false);
-        setEditingId(null);
-        setFormData({ name: '', description: '', icon: '', displayOrder: 0 });
-        loadIndustries();
-      } else {
-        const errorMessage = response?.message || 'Failed to save industry';
-        alert(errorMessage);
-      }
+      setShowModal(false);
+      setEditingId(null);
+      setFormData({ name: '', description: '', icon: '', displayOrder: 0 });
+      loadIndustries();
     } catch (error) {
       console.error('Error saving industry:', error);
-      const errorMessage = error.response?.data?.message || error.message || 'Failed to save industry. Please try again.';
-      alert(errorMessage);
+      alert('Failed to save industry');
     }
   };
 
@@ -213,12 +205,10 @@ export default function AdminEcoIndustries() {
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label htmlFor="industry-name" className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Name *
                 </label>
                 <input
-                  id="industry-name"
-                  name="industry-name"
                   type="text"
                   required
                   value={formData.name}
@@ -227,12 +217,10 @@ export default function AdminEcoIndustries() {
                 />
               </div>
               <div>
-                <label htmlFor="industry-description" className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Description
                 </label>
                 <textarea
-                  id="industry-description"
-                  name="industry-description"
                   rows={3}
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -240,24 +228,20 @@ export default function AdminEcoIndustries() {
                 />
               </div>
               <div>
-                <label htmlFor="industry-icon" className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Icon
                 </label>
                 <div className="space-y-2">
                   <div className="flex gap-2">
                     <input
-                      id="industry-icon"
-                      name="industry-icon"
                       type="text"
                       value={formData.icon}
                       onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
                       className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
                       placeholder="Enter image URL or upload file"
                     />
-                    <label htmlFor="industry-icon-upload" className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer flex items-center">
+                    <label className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 cursor-pointer flex items-center">
                       <input
-                        id="industry-icon-upload"
-                        name="industry-icon-upload"
                         type="file"
                         accept="image/*"
                         onChange={handleImageUpload}
@@ -282,12 +266,10 @@ export default function AdminEcoIndustries() {
                 </div>
               </div>
               <div>
-                <label htmlFor="industry-display-order" className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Display Order
                 </label>
                 <input
-                  id="industry-display-order"
-                  name="industry-display-order"
                   type="number"
                   value={formData.displayOrder}
                   onChange={(e) => {
