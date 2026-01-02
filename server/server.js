@@ -50,8 +50,10 @@ const corsOptions = {
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  optionsSuccessStatus: 200
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+  exposedHeaders: ['Content-Type', 'Content-Length'],
+  optionsSuccessStatus: 200,
+  maxAge: 86400 // 24 hours
 };
 
 app.use(cors(corsOptions));
@@ -59,6 +61,13 @@ app.use(cors(corsOptions));
 connectDB();
 
 initializeAdmin();
+
+// Set response headers to prevent CORB issues
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  next();
+});
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
