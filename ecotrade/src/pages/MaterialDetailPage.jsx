@@ -72,12 +72,19 @@ export default function MaterialDetailPage() {
                 src={material.images[0]}
                 alt={material.name}
                 className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg shadow-lg"
+                onError={(e) => {
+                  console.error('Image load error:', material.images[0]);
+                  e.target.style.display = 'none';
+                  const placeholder = e.target.nextSibling;
+                  if (placeholder) {
+                    placeholder.classList.remove('hidden');
+                  }
+                }}
               />
-            ) : (
-              <div className="w-full h-64 sm:h-80 lg:h-96 bg-gray-200 rounded-lg flex items-center justify-center">
-                <span className="text-sm sm:text-base text-gray-400">No image available</span>
-              </div>
-            )}
+            ) : null}
+            <div className={`w-full h-64 sm:h-80 lg:h-96 bg-gray-200 rounded-lg flex items-center justify-center ${material.images && material.images.length > 0 ? 'hidden' : ''}`}>
+              <span className="text-sm sm:text-base text-gray-400">No image available</span>
+            </div>
           </div>
 
           <div className="bg-white rounded-lg shadow-lg p-5 sm:p-6 lg:p-8">

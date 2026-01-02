@@ -41,10 +41,14 @@ const uploadToS3 = async (fileBuffer, originalName, mimeType, subfolder = 'mater
     if (S3_CONFIG.cloudfrontUrl) {
       // Remove trailing slash from CloudFront URL if present
       const cloudfrontBase = S3_CONFIG.cloudfrontUrl.replace(/\/$/, '');
-      return `${cloudfrontBase}/${s3Key}`;
+      const cloudfrontUrl = `${cloudfrontBase}/${s3Key}`;
+      console.log(`✅ Uploaded to S3: ${s3Key}, CloudFront URL: ${cloudfrontUrl}`);
+      return cloudfrontUrl;
     } else {
-      // Fallback to S3 URL
-      return `https://${S3_CONFIG.bucket}.s3.${S3_CONFIG.region}.amazonaws.com/${s3Key}`;
+      // Fallback to S3 URL (public read required)
+      const s3Url = `https://${S3_CONFIG.bucket}.s3.${S3_CONFIG.region}.amazonaws.com/${s3Key}`;
+      console.log(`✅ Uploaded to S3: ${s3Key}, S3 URL: ${s3Url}`);
+      return s3Url;
     }
   } catch (error) {
     console.error('Error uploading to S3:', error);

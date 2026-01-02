@@ -341,13 +341,21 @@ export default function EcoHomePage() {
                       to={`/eco-materials/${material._id}`}
                       className="flex-none w-[280px] sm:w-72 md:w-80 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all overflow-hidden border border-gray-100 hover:border-green-500"
                     >
-                      {material.images && material.images[0] && (
+                      {material.images && material.images[0] ? (
                         <img
                           src={material.images[0]}
                           alt={material.name}
                           className="w-full h-40 sm:h-48 object-cover"
+                          onError={(e) => {
+                            console.error('Image load error:', material.images[0]);
+                            e.target.style.display = 'none';
+                            e.target.nextSibling?.classList.remove('hidden');
+                          }}
                         />
-                      )}
+                      ) : null}
+                      <div className="w-full h-40 sm:h-48 bg-gray-200 flex items-center justify-center hidden">
+                        <span className="text-gray-400 text-xs">No image</span>
+                      </div>
                       <div className="p-5 sm:p-6">
                         <div className="text-xs sm:text-sm text-green-600 font-semibold mb-2">
                           {material.materialCode}
