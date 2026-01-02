@@ -68,20 +68,21 @@ app.use((req, res, next) => {
     res.setHeader('X-Frame-Options', 'SAMEORIGIN');
     res.setHeader('X-XSS-Protection', '1; mode=block');
     
-    // Set permissive CSP for all non-API routes (including static files)
+    // Set very permissive CSP for all non-API routes (including static files)
     // Allow unsafe-eval to prevent blocking issues with Vite and React
     if (!req.path.startsWith('/api/')) {
-      // Very permissive CSP - allows unsafe-eval for Vite/React compatibility
+      // Very permissive CSP - allows everything needed for React/Vite to work
+      // This prevents CSP blocking errors while maintaining basic security
       res.setHeader(
         'Content-Security-Policy',
-        "default-src 'self' 'unsafe-inline' 'unsafe-eval' data: blob: https:; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; " +
-        "style-src 'self' 'unsafe-inline' https:; " +
-        "img-src 'self' data: https: blob: http:; " +
-        "font-src 'self' data: https:; " +
-        "connect-src 'self' https: ws: wss: http:; " +
-        "frame-src 'self' https:; " +
-        "frame-ancestors 'self';"
+        "default-src * 'unsafe-inline' 'unsafe-eval' data: blob:; " +
+        "script-src * 'unsafe-inline' 'unsafe-eval'; " +
+        "style-src * 'unsafe-inline'; " +
+        "img-src * data: blob:; " +
+        "font-src * data:; " +
+        "connect-src *; " +
+        "frame-src *; " +
+        "frame-ancestors *;"
       );
     }
     next();
