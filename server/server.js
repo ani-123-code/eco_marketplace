@@ -62,46 +62,40 @@ initializeAdmin();
 
 // Set response headers to prevent CORB issues and configure CSP
 app.use((req, res, next) => {
-  // Set security headers
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
-  res.setHeader('X-XSS-Protection', '1; mode=block');
-  
-  // Set CSP header only for HTML pages (not API routes)
-  if (!req.path.startsWith('/api/') && req.accepts('text/html')) {
-    // Production: Strict CSP (Vite bundles don't use eval)
-    // Development: More permissive for HMR
-    const isProduction = process.env.NODE_ENV === 'production';
-    if (isProduction) {
-      // Strict CSP for production - Vite bundles don't need eval
-      res.setHeader(
-        'Content-Security-Policy',
-        "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline'; " +
-        "style-src 'self' 'unsafe-inline'; " +
-        "img-src 'self' data: https: blob:; " +
-        "font-src 'self' data:; " +
-        "connect-src 'self' https:; " +
-        "frame-ancestors 'self';"
-      );
-    } else {
-      // More permissive for development (HMR needs eval)
-      res.setHeader(
-        'Content-Security-Policy',
-        "default-src 'self'; " +
-        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
-        "style-src 'self' 'unsafe-inline'; " +
-        "img-src 'self' data: https: blob:; " +
-        "font-src 'self' data:; " +
-        "connect-src 'self' https: ws: wss:; " +
-        "frame-ancestors 'self';"
-      );
+  try {
+    // Set security headers
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    
+    // Set CSP header only for HTML pages (not API routes)
+    // Allow unsafe-eval for now to prevent blocking issues
+    if (!req.path.startsWith('/api/')) {
+      try {
+        const acceptsHtml = req.accepts && req.accepts('text/html');
+        if (acceptsHtml) {
+          // More permissive CSP - allow unsafe-eval for compatibility
+          res.setHeader(
+            'Content-Security-Policy',
+            "default-src 'self'; " +
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+            "style-src 'self' 'unsafe-inline'; " +
+            "img-src 'self' data: https: blob:; " +
+            "font-src 'self' data:; " +
+            "connect-src 'self' https: ws: wss:; " +
+            "frame-ancestors 'self';"
+          );
+        }
+      } catch (err) {
+        // If accepts() fails, continue without CSP
+        console.warn('Error setting CSP:', err.message);
+      }
     }
-  } else {
-    // For API routes, set JSON content type
-    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    next();
+  } catch (error) {
+    console.error('Error in header middleware:', error);
+    next(); // Continue even if headers fail
   }
-  next();
 });
 
 app.use(express.json({ limit: '10mb' }));
@@ -169,13 +163,27 @@ if (process.env.NODE_ENV === 'production') {
       etag: true
     }));
     
-    // Handle React routing, return all requests to React app
+    // Handle React routing, return all non-API requests to React app
     // This must be BEFORE the catch-all error handler
     app.get('*', (req, res, next) => {
       // Don't serve React app for API routes
       if (req.path.startsWith('/api/')) {
         return next(); // Let it fall through to 404 handler
       }
+      res.sendFile(path.join(buildPath, 'index.html'), (err) => {
+        if (err) {
+          console.error('Error serving index.html:', err);
+          next(err);
+        }
+      });
+    });
+    
+    // Handle POST/PUT/DELETE requests to non-API routes (SPA routing)
+    app.post('*', (req, res, next) => {
+      if (req.path.startsWith('/api/')) {
+        return next();
+      }
+      // For SPA, return index.html for POST requests too
       res.sendFile(path.join(buildPath, 'index.html'), (err) => {
         if (err) {
           console.error('Error serving index.html:', err);
@@ -228,18 +236,24 @@ app.use((err, req, res, next) => {
 
 // 404 handler for API routes only (if frontend not found or API route doesn't exist)
 app.use('*', (req, res) => {
+  // Only handle API routes here, frontend routes should be handled above
   if (req.path.startsWith('/api/')) {
     res.status(404).json({
       message: 'API route not found',
       path: req.originalUrl
     });
-  } else {
-    // If frontend build exists, this shouldn't be reached
-    // If frontend build doesn't exist, show helpful message
+  } else if (process.env.NODE_ENV === 'production') {
+    // In production, if we reach here, frontend build might not exist
     res.status(404).json({
       message: 'Route not found',
       path: req.originalUrl,
       note: 'Frontend may not be built or deployed. Check build logs.'
+    });
+  } else {
+    // Development mode
+    res.status(404).json({
+      message: 'Route not found',
+      path: req.originalUrl
     });
   }
 });
