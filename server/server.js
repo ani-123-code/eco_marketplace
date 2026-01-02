@@ -62,10 +62,47 @@ connectDB();
 
 initializeAdmin();
 
-// Set response headers to prevent CORB issues
+// Set response headers to prevent CORB issues and configure CSP
 app.use((req, res, next) => {
+  // Set security headers
   res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  
+  // Set CSP header only for HTML pages (not API routes)
+  if (!req.path.startsWith('/api/') && req.accepts('text/html')) {
+    // Production: Strict CSP (Vite bundles don't use eval)
+    // Development: More permissive for HMR
+    const isProduction = process.env.NODE_ENV === 'production';
+    if (isProduction) {
+      // Strict CSP for production - Vite bundles don't need eval
+      res.setHeader(
+        'Content-Security-Policy',
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline'; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data: https: blob:; " +
+        "font-src 'self' data:; " +
+        "connect-src 'self' https:; " +
+        "frame-ancestors 'self';"
+      );
+    } else {
+      // More permissive for development (HMR needs eval)
+      res.setHeader(
+        'Content-Security-Policy',
+        "default-src 'self'; " +
+        "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+        "style-src 'self' 'unsafe-inline'; " +
+        "img-src 'self' data: https: blob:; " +
+        "font-src 'self' data:; " +
+        "connect-src 'self' https: ws: wss:; " +
+        "frame-ancestors 'self';"
+      );
+    }
+  } else {
+    // For API routes, set JSON content type
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  }
   next();
 });
 
