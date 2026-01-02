@@ -7,7 +7,14 @@ const initializeAdmin = async () => {
     const adminPassword = process.env.ADMIN_PASSWORD;
     
     if (!adminEmail || !adminPassword) {
-      console.error('Admin credentials not found in environment variables');
+      console.warn('⚠️  Admin credentials not found in environment variables');
+      return;
+    }
+
+    // Check if mongoose is connected
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      console.warn('⚠️  Database not connected. Skipping admin initialization.');
       return;
     }
 
@@ -31,9 +38,9 @@ const initializeAdmin = async () => {
       });
       
       await admin.save();
-      console.log('Admin user created successfully');
+      console.log('✅ Admin user created successfully');
     } else {
-      console.log('Admin user already exists');
+      console.log('ℹ️  Admin user already exists');
       
       // Update admin password if it has changed
       const isPasswordValid = await bcrypt.compare(adminPassword, adminExists.password);
@@ -43,11 +50,12 @@ const initializeAdmin = async () => {
         
         adminExists.password = hashedPassword;
         await adminExists.save();
-        console.log('Admin password updated');
+        console.log('✅ Admin password updated');
       }
     }
   } catch (error) {
-    console.error('Error initializing admin:', error);
+    console.error('❌ Error initializing admin:', error.message);
+    // Don't throw - let server continue
   }
 };
 

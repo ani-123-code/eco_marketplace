@@ -56,9 +56,22 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-connectDB();
-
-initializeAdmin();
+// Initialize database and admin asynchronously
+(async () => {
+  try {
+    const dbConnected = await connectDB();
+    if (dbConnected) {
+      // Wait a bit for DB to be fully ready
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      await initializeAdmin();
+    } else {
+      console.warn('⚠️  Server starting without database connection');
+    }
+  } catch (error) {
+    console.error('❌ Error during initialization:', error.message);
+    // Don't crash - let server continue
+  }
+})();
 
 // Set response headers to prevent CORB issues and configure CSP
 app.use((req, res, next) => {
@@ -252,10 +265,31 @@ app.use('*', (req, res) => {
   }
 });
 
+// Handle uncaught exceptions and unhandled rejections
+process.on('uncaughtException', (error) => {
+  console.error('❌ Uncaught Exception:', error);
+  // Don't exit - log and continue
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
+  // Don't exit - log and continue
+});
+
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`✅ Eco Marketplace Server running on port ${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🗄️  Database: ${process.env.MONGODB_URI ? 'Connected' : 'Not configured'}`);
+  console.log(`🗄️  Database: ${process.env.MONGODB_URI ? 'Checking...' : 'Not configured'}`);
+});
+
+// Handle server errors gracefully
+server.on('error', (error) => {
+  if (error.code === 'EADDRINUSE') {
+    console.error(`❌ Port ${PORT} is already in use`);
+  } else {
+    console.error('❌ Server error:', error);
+  }
+  // Don't exit - let Railway handle restarts
 });
