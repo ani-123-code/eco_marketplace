@@ -30,12 +30,15 @@ const uploadToS3 = async (fileBuffer, originalName, mimeType, subfolder = 'mater
       Key: s3Key,
       Body: fileBuffer,
       ContentType: mimeType,
+      // Set Cache-Control for better CloudFront caching
+      CacheControl: 'max-age=31536000, public',
       // Note: ACL is deprecated for newer S3 buckets. 
       // Ensure bucket has public read policy or remove ACL if bucket ACLs are disabled
       // ACL: 'public-read', // Uncomment if your bucket supports ACLs
     };
 
     await s3Client.send(new PutObjectCommand(uploadParams));
+    console.log(`📤 Uploaded file to S3: ${s3Key} (${(fileBuffer.length / 1024).toFixed(2)} KB)`);
 
     // Return CloudFront URL if configured, otherwise S3 URL
     if (S3_CONFIG.cloudfrontUrl) {
