@@ -12,15 +12,44 @@ This means your S3 bucket doesn't have public read access configured.
 
 ### Solution 1: Add Public Read Policy to S3 Bucket (Quickest Fix)
 
-1. Go to AWS S3 Console
-2. Select your bucket: `ecodispose-images-bucket-2025`
-3. Go to **Permissions** tab
-4. Scroll to **Bucket policy**
-5. Add this policy:
+**If you already have a CloudFront policy**, use this combined policy (keeps CloudFront + adds public access):
 
 ```json
 {
   "Version": "2012-10-17",
+  "Id": "PublicReadForEcoMarket",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::ecodispose-images-bucket-2025/eco_market/*"
+    },
+    {
+      "Sid": "AllowCloudFrontServicePrincipal",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudfront.amazonaws.com"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::ecodispose-images-bucket-2025/*",
+      "Condition": {
+        "ArnLike": {
+          "AWS:SourceArn": "arn:aws:cloudfront::036983628673:distribution/EHFTP8IL2AWYX"
+        }
+      }
+    }
+  ]
+}
+```
+
+**Or if you want ONLY public access** (remove CloudFront requirement):
+
+```json
+{
+  "Version": "2012-10-17",
+  "Id": "PublicReadForEcoMarket",
   "Statement": [
     {
       "Sid": "PublicReadGetObject",
@@ -33,12 +62,20 @@ This means your S3 bucket doesn't have public read access configured.
 }
 ```
 
+**Steps:**
+1. Go to AWS S3 Console
+2. Select your bucket: `ecodispose-images-bucket-2025`
+3. Go to **Permissions** tab
+4. Scroll to **Bucket policy**
+5. Click **Edit** and replace with one of the policies above
 6. Click **Save**
-7. Also check **Block public access** settings:
+7. **IMPORTANT:** Also check **Block public access** settings:
    - Go to **Permissions** → **Block public access**
+   - Click **Edit**
    - Uncheck "Block all public access" OR
    - At minimum, uncheck "Block public access to buckets and objects granted through new access control lists (ACLs)"
    - Click **Save changes**
+   - Type `confirm` when prompted
 
 ### Solution 2: Use CloudFront with Origin Access Control (Recommended)
 

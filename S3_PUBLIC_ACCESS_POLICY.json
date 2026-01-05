@@ -1,0 +1,28 @@
+{
+  "Version": "2012-10-17",
+  "Id": "PublicReadForEcoMarket",
+  "Statement": [
+    {
+      "Sid": "PublicReadGetObject",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::ecodispose-images-bucket-2025/eco_market/*"
+    },
+    {
+      "Sid": "AllowCloudFrontServicePrincipal",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudfront.amazonaws.com"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::ecodispose-images-bucket-2025/*",
+      "Condition": {
+        "ArnLike": {
+          "AWS:SourceArn": "arn:aws:cloudfront::036983628673:distribution/EHFTP8IL2AWYX"
+        }
+      }
+    }
+  ]
+}
+
