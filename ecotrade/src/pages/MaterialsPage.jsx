@@ -261,10 +261,20 @@ export default function MaterialsPage() {
                           src={material.images[0]}
                           alt={material.name}
                           className="w-full h-40 sm:h-48 object-cover"
+                          loading="lazy"
+                          crossOrigin="anonymous"
                           onError={(e) => {
-                            console.error('Image load error:', material.images[0]);
+                            console.error('❌ Image load error:', material.images[0]);
+                            console.error('Material ID:', material._id);
+                            console.error('Image URL:', material.images[0]);
                             e.target.style.display = 'none';
-                            e.target.nextSibling?.classList.remove('hidden');
+                            const placeholder = e.target.nextElementSibling;
+                            if (placeholder) {
+                              placeholder.classList.remove('hidden');
+                            }
+                          }}
+                          onLoad={() => {
+                            console.log('✅ Image loaded successfully:', material.images[0]);
                           }}
                         />
                       ) : null}

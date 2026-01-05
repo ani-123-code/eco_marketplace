@@ -72,13 +72,20 @@ export default function MaterialDetailPage() {
                 src={material.images[0]}
                 alt={material.name}
                 className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg shadow-lg"
+                loading="lazy"
+                crossOrigin="anonymous"
                 onError={(e) => {
-                  console.error('Image load error:', material.images[0]);
+                  console.error('❌ Image load error:', material.images[0]);
+                  console.error('Material ID:', material._id);
+                  console.error('Image URL:', material.images[0]);
                   e.target.style.display = 'none';
                   const placeholder = e.target.nextSibling;
                   if (placeholder) {
                     placeholder.classList.remove('hidden');
                   }
+                }}
+                onLoad={() => {
+                  console.log('✅ Image loaded successfully:', material.images[0]);
                 }}
               />
             ) : null}
