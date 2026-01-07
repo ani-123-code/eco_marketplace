@@ -364,7 +364,7 @@ export default function EcoHomePage() {
                 {industries.map((industry) => (
                   <Link
                     key={industry._id}
-                    to={`/eco-materials?industry=${industry.slug}`}
+                    to={`/catalog?type=materials&industry=${industry.slug}`}
                     className="snap-start flex-none w-[280px] sm:w-72 md:w-80 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all border border-gray-100 hover:border-green-500"
                   >
                     <div className="p-5 sm:p-6">
@@ -391,7 +391,7 @@ export default function EcoHomePage() {
                         {industry.description}
                       </p>
                       <div className="flex items-center justify-between text-xs sm:text-sm font-semibold">
-                        <span className="text-green-600">Explore Materials</span>
+                        <span className="text-green-600">Explore Catalog</span>
                         <span className="text-green-600 text-base sm:text-lg">→</span>
                       </div>
                     </div>
