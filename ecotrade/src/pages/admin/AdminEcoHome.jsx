@@ -51,7 +51,7 @@ export default function AdminEcoHome() {
     <div className="p-6">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Eco Marketplace Dashboard</h1>
-        <p className="text-gray-600 mt-2">Welcome to the admin panel for PCR materials management</p>
+        <p className="text-gray-600 mt-2">Welcome to the admin panel for materials, machines, and software management</p>
       </div>
 
       {metrics && (

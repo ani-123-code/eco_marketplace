@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, Menu, X, ChevronRight, ChevronLeft, BarChart3, Factory, PackageOpen, FileText, Mail, Store } from 'lucide-react';
+import { LogOut, Menu, X, ChevronRight, ChevronLeft, BarChart3, Factory, PackageOpen, FileText, Mail, Store, Cpu, Code } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import AdminEcoHome from './AdminEcoHome';
 import AdminEcoIndustries from './AdminEcoIndustries';
 import AdminEcoMaterials from './AdminEcoMaterials';
+import AdminMachines from './AdminMachines';
+import AdminSoftware from './AdminSoftware';
 import AdminEcoRequests from './AdminEcoRequests';
 import AdminContactMessages from './AdminContactMessages';
 import AdminSellerRequests from './AdminSellerRequests';
@@ -13,6 +15,8 @@ const AdminTab = {
   DASHBOARD: 'dashboard',
   INDUSTRIES: 'industries',
   MATERIALS: 'materials',
+  MACHINES: 'machines',
+  SOFTWARE: 'software',
   REQUESTS: 'requests',
   CONTACTS: 'contacts',
   SELLERS: 'sellers',
@@ -80,6 +84,8 @@ const AdminDashboard = () => {
     { key: AdminTab.DASHBOARD, label: 'Dashboard', icon: BarChart3 },
     { key: AdminTab.INDUSTRIES, label: 'Industries', icon: Factory },
     { key: AdminTab.MATERIALS, label: 'Materials', icon: PackageOpen },
+    { key: AdminTab.MACHINES, label: 'Machines', icon: Cpu },
+    { key: AdminTab.SOFTWARE, label: 'Software', icon: Code },
     { key: AdminTab.REQUESTS, label: 'Buyer Requests', icon: FileText },
     { key: AdminTab.SELLERS, label: 'Seller Requests', icon: Store },
     { key: AdminTab.CONTACTS, label: 'Contact Leads', icon: Mail },
@@ -93,6 +99,10 @@ const AdminDashboard = () => {
         return <AdminEcoIndustries />;
       case AdminTab.MATERIALS:
         return <AdminEcoMaterials />;
+      case AdminTab.MACHINES:
+        return <AdminMachines />;
+      case AdminTab.SOFTWARE:
+        return <AdminSoftware />;
       case AdminTab.REQUESTS:
         return <AdminEcoRequests />;
       case AdminTab.SELLERS:

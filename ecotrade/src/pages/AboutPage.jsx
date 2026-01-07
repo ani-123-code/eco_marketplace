@@ -5,34 +5,34 @@ export default function AboutPage() {
     {
       title: 'Our Mission',
       description:
-        'To democratize access to premium Post-Consumer Recycled materials, empowering industries to transition from virgin inputs to sustainable alternatives with confidence and transparency.'
+        'To be the one place where businesses can find everything they need—materials, machines, and software. We simplify procurement by connecting verified suppliers with businesses across industries, ensuring quality, transparency, and efficiency in every transaction.'
     },
     {
-      title: 'Our Network',
+      title: 'Our Platform',
       description:
-        'A rigorously vetted ecosystem of 250+ certified PCR suppliers and processors specializing in plastics, metals, composites, and specialty recycled materials.'
+        'A comprehensive B2B marketplace featuring 500+ verified products across materials, industrial machines, and business software. Our platform serves diverse industries including manufacturing, construction, technology, and services, all in one unified ecosystem.'
     },
     {
       title: 'Our Impact',
       description:
-        'Enabling manufacturers worldwide to meet ambitious sustainability commitments while maintaining stringent quality standards and optimizing procurement costs.'
+        'Empowering businesses worldwide to streamline their procurement processes, reduce sourcing time, and access quality-certified products. We help companies optimize costs, improve efficiency, and accelerate growth through our integrated marketplace platform.'
     }
   ];
 
   const processSteps = [
     {
-      title: 'Requirements Discovery',
-      description: 'Our specialists conduct in-depth consultations to understand your technical specifications, compliance frameworks, volume requirements, and delivery timelines.'
+      title: 'Product Discovery',
+      description: 'Browse our comprehensive catalog of materials, machines, and software. Use advanced search filters, compare specifications, and explore industry-specific categories to find exactly what your business needs.'
     },
     {
-      title: 'Intelligent Matching',
+      title: 'Verification & Comparison',
       description:
-        'Leveraging our proprietary supplier intelligence platform, we identify and shortlist qualified PCR producers with verified certifications and proven supply chain reliability.'
+        'Review detailed product information, certifications, and supplier credentials. Compare multiple options side-by-side, access technical documentation, and verify quality standards before making decisions.'
     },
     {
-      title: 'End-to-End Fulfillment',
+      title: 'Procurement & Support',
       description:
-        'Dedicated account managers orchestrate the entire process—from sample coordination and quality documentation to logistics management and ongoing supply monitoring.'
+        'Request quotes, schedule demos or trials, and complete purchases seamlessly. Our platform facilitates direct communication with suppliers and provides dedicated support throughout the entire procurement journey.'
     }
   ];
 
@@ -52,10 +52,10 @@ export default function AboutPage() {
               About Eco Marketplace
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6 leading-tight">
-              Powering the Circular Economy Through Premium PCR Materials
+              One Place for Materials, Machines & Software
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-green-100 leading-relaxed">
-              We bridge the gap between sustainability ambition and supply chain execution—connecting global enterprises, OEMs, and innovative manufacturers with best-in-class Post-Consumer Recycled material suppliers.
+              Eco Marketplace is your comprehensive B2B platform connecting businesses with verified suppliers of materials, industrial machines, and business software. We simplify procurement, ensure quality, and accelerate business growth—all from one unified marketplace.
             </p>
           </div>
         </div>
@@ -82,10 +82,10 @@ export default function AboutPage() {
                 Our Methodology
               </p>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
-                White-Glove PCR Sourcing from Discovery to Deployment
+                Comprehensive Business Solutions from Discovery to Delivery
               </h2>
               <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4 sm:mb-6">
-                Eco Marketplace synthesizes advanced data analytics, deep industry expertise, and comprehensive supplier audits to eliminate risk from recycled material procurement. We validate feedstock provenance, processing capabilities, and compliance certifications—enabling your team to launch ambitious recycled content programs with full confidence.
+                Eco Marketplace combines advanced search capabilities, comprehensive product catalogs, and verified supplier networks to streamline your entire procurement process. Whether you need materials for production, machines for operations, or software for business management, our platform provides end-to-end support—from product discovery and comparison to quote requests, demos, and final procurement. We ensure quality, verify credentials, and facilitate seamless transactions.
               </p>
               <div className="space-y-4 sm:space-y-5">
                 {processSteps.map((step, index) => (
@@ -102,10 +102,10 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="bg-gray-900 text-white rounded-3xl p-6 sm:p-8 shadow-lg">
-              <p className="text-green-300 text-xs sm:text-sm uppercase tracking-widest mb-3 sm:mb-4">Measurable Impact</p>
-              <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 leading-tight">1M+ Kilograms of Premium PCR Materials Delivered</h3>
+              <p className="text-green-300 text-xs sm:text-sm uppercase tracking-widest mb-3 sm:mb-4">Platform Impact</p>
+              <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 leading-tight">500+ Products Across Materials, Machines & Software</h3>
               <p className="text-sm sm:text-base text-gray-200 leading-relaxed mb-4 sm:mb-6">
-                Industry leaders partner with Eco Marketplace to accelerate their transition to circular material strategies. Our integrated platform provides end-to-end visibility—from supplier verification and contract negotiation to shipment tracking and quality assurance—enabling rapid scaling without compromising on standards.
+                Businesses across industries trust Eco Marketplace to streamline their procurement processes. Our integrated platform provides comprehensive visibility—from product discovery and supplier verification to quote management, order tracking, and quality assurance. We enable businesses to source everything they need in one place, saving time and reducing complexity.
               </p>
               <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-white/10 rounded-xl p-3 sm:p-4">

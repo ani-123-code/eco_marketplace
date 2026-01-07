@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
-const materialSchema = new mongoose.Schema({
-  materialCode: {
+const machineSchema = new mongoose.Schema({
+  machineCode: {
     type: String,
     unique: true,
     uppercase: true,
@@ -24,56 +24,38 @@ const materialSchema = new mongoose.Schema({
   images: [{
     type: String
   }],
-  attributes: {
+  specifications: {
     type: Map,
-    of: {
-      label: String,
-      value: mongoose.Schema.Types.Mixed,
-      type: {
-        type: String,
-        enum: ['text', 'number', 'select', 'multiselect', 'range', 'boolean']
-      },
-      unit: String,
-      filterEnabled: {
-        type: Boolean,
-        default: false
-      }
-    }
+    of: mongoose.Schema.Types.Mixed
   },
-  availableQuantity: {
+  manufacturer: {
+    type: String,
+    default: ''
+  },
+  model: {
+    type: String,
+    default: ''
+  },
+  price: {
     type: Number,
-    required: true,
     default: 0,
     min: 0
   },
-  unit: {
+  currency: {
     type: String,
-    required: true,
-    default: 'kg'
+    default: 'USD'
   },
-  minimumOrderQuantity: {
-    type: Number,
-    default: 1,
-    min: 1
+  availability: {
+    type: String,
+    enum: ['in-stock', 'out-of-stock', 'pre-order'],
+    default: 'in-stock'
   },
   certifications: [{
     type: String
   }],
-  complianceFlags: [{
+  features: [{
     type: String
   }],
-  supplyRegion: {
-    type: String,
-    default: ''
-  },
-  packagingType: {
-    type: String,
-    default: ''
-  },
-  batchInfo: {
-    type: String,
-    default: ''
-  },
   tags: [{
     type: String
   }],
@@ -95,22 +77,23 @@ const materialSchema = new mongoose.Schema({
   }
 });
 
-materialSchema.pre('save', async function(next) {
-  if (!this.materialCode && this.isNew) {
+machineSchema.pre('save', async function(next) {
+  if (!this.machineCode && this.isNew) {
     const Industry = mongoose.model('Industry');
     const industry = await Industry.findById(this.industry);
     const industryPrefix = industry ? industry.slug.substring(0, 4).toUpperCase() : 'OP';
     const timestamp = Date.now().toString().slice(-6);
     const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    this.materialCode = `OP-${industryPrefix}-${timestamp}${random}`;
+    this.machineCode = `OP-MACH-${industryPrefix}-${timestamp}${random}`;
   }
   this.updatedAt = Date.now();
   next();
 });
 
-materialSchema.index({ industry: 1, isActive: 1 });
-materialSchema.index({ materialCode: 1 });
-materialSchema.index({ isFeatured: 1, isActive: 1 });
-materialSchema.index({ tags: 1 });
+machineSchema.index({ industry: 1, isActive: 1 });
+machineSchema.index({ machineCode: 1 });
+machineSchema.index({ isFeatured: 1, isActive: 1 });
+machineSchema.index({ tags: 1 });
 
-module.exports = mongoose.model('Material', materialSchema);
+module.exports = mongoose.model('Machine', machineSchema);
+

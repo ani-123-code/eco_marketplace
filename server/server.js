@@ -8,6 +8,8 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const industryRoutes = require('./routes/industryRoutes');
 const materialRoutes = require('./routes/materialRoutes');
+const machineRoutes = require('./routes/machineRoutes');
+const softwareRoutes = require('./routes/softwareRoutes');
 const buyerRequestRoutes = require('./routes/buyerRequestRoutes');
 const contactRoutes = require('./routes/contactRoutes');
 const analyticsRoutes = require('./routes/analyticsRoutes');
@@ -119,6 +121,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', userRoutes);
 app.use('/api/industries', industryRoutes);
 app.use('/api/materials', materialRoutes);
+app.use('/api/machines', machineRoutes);
+app.use('/api/software', softwareRoutes);
 app.use('/api/buyer-requests', buyerRequestRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/analytics', analyticsRoutes);
@@ -220,7 +224,7 @@ if (process.env.NODE_ENV === 'production') {
   // Development mode - just show API info
   app.get('/', (req, res) => {
     res.json({
-      message: 'Eco Marketplace API - B2B PCR Materials Platform',
+      message: 'Eco Marketplace API - One Place for Materials, Machines & Software',
       status: 'running',
       environment: 'development',
       endpoints: {

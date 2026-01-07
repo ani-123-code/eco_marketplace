@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { materialAPI } from '../../api/materialAPI';
+import { machineAPI } from '../../api/machineAPI';
 import { industryAPI } from '../../api/industryAPI';
 import { uploadAPI } from '../../api/uploadAPI';
 import { validateImageFile } from '../../utils/imageUpload';
 
-export default function AdminEcoMaterials() {
-  const [materials, setMaterials] = useState([]);
+export default function AdminMachines() {
+  const [machines, setMachines] = useState([]);
   const [industries, setIndustries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -16,13 +16,15 @@ export default function AdminEcoMaterials() {
     name: '',
     industry: '',
     description: '',
-    availableQuantity: 0,
-    unit: 'kg',
-    minimumOrderQuantity: 1,
+    manufacturer: '',
+    model: '',
+    price: 0,
+    currency: 'USD',
+    availability: 'in-stock',
     images: [],
     certifications: [],
-    supplyRegion: '',
-    packagingType: '',
+    features: [],
+    tags: [],
     isFeatured: false
   });
 
@@ -31,7 +33,7 @@ export default function AdminEcoMaterials() {
   }, []);
 
   useEffect(() => {
-    loadMaterials();
+    loadMachines();
   }, [selectedIndustry]);
 
   const loadData = async () => {
@@ -44,7 +46,7 @@ export default function AdminEcoMaterials() {
         setIndustries(industriesRes.industries);
       }
 
-      await loadMaterials();
+      await loadMachines();
     } catch (error) {
       console.error('Error loading data:', error);
     } finally {
@@ -52,15 +54,15 @@ export default function AdminEcoMaterials() {
     }
   };
 
-  const loadMaterials = async () => {
+  const loadMachines = async () => {
     try {
       const params = selectedIndustry ? { industry: selectedIndustry } : {};
-      const res = await materialAPI.getAll(params);
+      const res = await machineAPI.getAll(params);
       if (res.success) {
-        setMaterials(res.materials);
+        setMachines(res.machines);
       }
     } catch (error) {
-      console.error('Error loading materials:', error);
+      console.error('Error loading machines:', error);
     }
   };
 
@@ -70,22 +72,24 @@ export default function AdminEcoMaterials() {
       const data = {
         ...formData,
         certifications: formData.certifications.filter(c => c.trim()),
+        features: formData.features.filter(f => f.trim()),
+        tags: formData.tags.filter(t => t.trim()),
         images: formData.images.filter(i => i.trim())
       };
 
       if (editingId) {
-        await materialAPI.update(editingId, data);
+        await machineAPI.update(editingId, data);
       } else {
-        await materialAPI.create(data);
+        await machineAPI.create(data);
       }
 
       setShowModal(false);
       setEditingId(null);
       resetForm();
-      loadMaterials();
+      loadMachines();
     } catch (error) {
-      console.error('Error saving material:', error);
-      alert('Failed to save material');
+      console.error('Error saving machine:', error);
+      alert('Failed to save machine');
     }
   };
 
@@ -94,55 +98,46 @@ export default function AdminEcoMaterials() {
       name: '',
       industry: '',
       description: '',
-      availableQuantity: 0,
-      unit: 'kg',
-      minimumOrderQuantity: 1,
+      manufacturer: '',
+      model: '',
+      price: 0,
+      currency: 'USD',
+      availability: 'in-stock',
       images: [],
       certifications: [],
-      supplyRegion: '',
-      packagingType: '',
+      features: [],
+      tags: [],
       isFeatured: false
     });
   };
 
-  const handleEdit = (material) => {
-    setEditingId(material._id);
+  const handleEdit = (machine) => {
+    setEditingId(machine._id);
     setFormData({
-      name: material.name,
-      industry: material.industry._id || material.industry,
-      description: material.description || '',
-      availableQuantity: material.availableQuantity,
-      unit: material.unit,
-      minimumOrderQuantity: material.minimumOrderQuantity,
-      images: material.images || [],
-      certifications: material.certifications || [],
-      supplyRegion: material.supplyRegion || '',
-      packagingType: material.packagingType || '',
-      isFeatured: material.isFeatured || false
+      name: machine.name,
+      industry: machine.industry._id || machine.industry,
+      description: machine.description || '',
+      manufacturer: machine.manufacturer || '',
+      model: machine.model || '',
+      price: machine.price || 0,
+      currency: machine.currency || 'USD',
+      availability: machine.availability || 'in-stock',
+      images: machine.images || [],
+      certifications: machine.certifications || [],
+      features: machine.features || [],
+      tags: machine.tags || [],
+      isFeatured: machine.isFeatured || false
     });
     setShowModal(true);
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to deactivate this material?')) {
+    if (window.confirm('Are you sure you want to deactivate this machine?')) {
       try {
-        await materialAPI.delete(id);
-        loadMaterials();
+        await machineAPI.delete(id);
+        loadMachines();
       } catch (error) {
-        console.error('Error deleting material:', error);
-      }
-    }
-  };
-
-  const handleStockAdjust = async (id) => {
-    const quantity = prompt('Enter quantity to add (negative to subtract):');
-    if (quantity !== null) {
-      try {
-        const operation = parseFloat(quantity) >= 0 ? 'add' : 'subtract';
-        await materialAPI.adjustStock(id, operation, Math.abs(parseFloat(quantity)));
-        loadMaterials();
-      } catch (error) {
-        console.error('Error adjusting stock:', error);
+        console.error('Error deleting machine:', error);
       }
     }
   };
@@ -155,7 +150,6 @@ export default function AdminEcoMaterials() {
     const newImages = [...formData.images];
 
     try {
-      // Validate all files first
       const validFiles = [];
       for (const file of files) {
         const validation = validateImageFile(file);
@@ -172,7 +166,6 @@ export default function AdminEcoMaterials() {
         return;
       }
 
-      // Upload all files to S3
       const response = await uploadAPI.uploadImages(validFiles);
       
       if (response.success && response.imageUrls) {
@@ -186,7 +179,7 @@ export default function AdminEcoMaterials() {
       alert(`Failed to upload images: ${error.response?.data?.message || error.message}`);
     } finally {
       setUploading(false);
-      e.target.value = ''; // Reset input
+      e.target.value = '';
     }
   };
 
@@ -202,12 +195,24 @@ export default function AdminEcoMaterials() {
     }
   };
 
+  const addArrayItem = (field) => {
+    const item = prompt(`Enter ${field}:`);
+    if (item && item.trim()) {
+      setFormData({ ...formData, [field]: [...formData[field], item.trim()] });
+    }
+  };
+
+  const removeArrayItem = (field, index) => {
+    const newArray = formData[field].filter((_, i) => i !== index);
+    setFormData({ ...formData, [field]: newArray });
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Manage Materials</h1>
-          <p className="text-gray-600 mt-1">Manage materials catalog and inventory</p>
+          <h1 className="text-2xl font-bold text-gray-800">Manage Machines</h1>
+          <p className="text-gray-600 mt-1">Manage machines catalog for industries</p>
         </div>
         <button
           onClick={() => {
@@ -217,7 +222,7 @@ export default function AdminEcoMaterials() {
           }}
           className="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
         >
-          + Add Material
+          + Add Machine
         </button>
       </div>
 
@@ -244,62 +249,48 @@ export default function AdminEcoMaterials() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Material</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Machine</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Industry</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stock</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">MOQ</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Manufacturer</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {materials.map((material) => (
-                  <tr key={material._id}>
+                {machines.map((machine) => (
+                  <tr key={machine._id}>
                     <td className="px-6 py-4">
                       <div className="flex items-center">
-                        {material.images?.[0] && (
-                          <img src={material.images[0]} alt="" className="w-10 h-10 mr-3 object-cover rounded" />
+                        {machine.images?.[0] && (
+                          <img src={machine.images[0]} alt="" className="w-10 h-10 mr-3 object-cover rounded" />
                         )}
-                        <span className="font-medium text-gray-900">{material.name}</span>
+                        <span className="font-medium text-gray-900">{machine.name}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{material.materialCode}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{material.industry?.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`text-sm font-medium ${
-                        material.availableQuantity === 0 ? 'text-red-600' :
-                        material.availableQuantity < 50 ? 'text-yellow-600' :
-                        'text-green-600'
-                      }`}>
-                        {material.availableQuantity} {material.unit}
-                      </span>
-                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{machine.machineCode}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{machine.industry?.name}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{machine.manufacturer}</td>
                     <td className="px-6 py-4 text-sm text-gray-600">
-                      {material.minimumOrderQuantity} {material.unit}
+                      {machine.price > 0 ? `${machine.currency} ${machine.price}` : 'N/A'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                        material.isFeatured ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
+                        machine.isFeatured ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'
                       }`}>
-                        {material.isFeatured ? 'Featured' : 'Standard'}
+                        {machine.isFeatured ? 'Featured' : 'Standard'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <button
-                        onClick={() => handleEdit(material)}
+                        onClick={() => handleEdit(machine)}
                         className="text-blue-600 hover:text-blue-800 mr-2"
                       >
                         Edit
                       </button>
                       <button
-                        onClick={() => handleStockAdjust(material._id)}
-                        className="text-green-600 hover:text-green-800 mr-2"
-                      >
-                        Stock
-                      </button>
-                      <button
-                        onClick={() => handleDelete(material._id)}
+                        onClick={() => handleDelete(machine._id)}
                         className="text-red-600 hover:text-red-800"
                       >
                         Delete
@@ -315,9 +306,9 @@ export default function AdminEcoMaterials() {
 
       {showModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto">
-          <div className="bg-white rounded-lg p-8 max-w-2xl w-full m-4 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg p-8 max-w-3xl w-full m-4 max-h-[90vh] overflow-y-auto">
             <h2 className="text-xl font-bold mb-4">
-              {editingId ? 'Edit Material' : 'Add Material'}
+              {editingId ? 'Edit Machine' : 'Add Machine'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
@@ -355,60 +346,128 @@ export default function AdminEcoMaterials() {
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Available Quantity *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Manufacturer</label>
                   <input
-                    type="number"
-                    required
-                    min="0"
-                    value={formData.availableQuantity}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setFormData({ 
-                        ...formData, 
-                        availableQuantity: value === '' ? '' : (parseFloat(value) || 0)
-                      });
-                    }}
+                    type="text"
+                    value={formData.manufacturer}
+                    onChange={(e) => setFormData({ ...formData, manufacturer: e.target.value })}
                     className="w-full px-4 py-2 border rounded-lg"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Unit *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Model</label>
+                  <input
+                    type="text"
+                    value={formData.model}
+                    onChange={(e) => setFormData({ ...formData, model: e.target.value })}
+                    className="w-full px-4 py-2 border rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Price</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: parseFloat(e.target.value) || 0 })}
+                    className="w-full px-4 py-2 border rounded-lg"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Currency</label>
                   <select
-                    value={formData.unit}
-                    onChange={(e) => setFormData({ ...formData, unit: e.target.value })}
+                    value={formData.currency}
+                    onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
                     className="w-full px-4 py-2 border rounded-lg"
                   >
-                    <option value="kg">kg</option>
-                    <option value="tonne">tonne</option>
-                    <option value="litre">litre</option>
-                    <option value="piece">piece</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="INR">INR</option>
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Min Order Qty *</label>
-                  <input
-                    type="number"
-                    required
-                    min="1"
-                    value={formData.minimumOrderQuantity}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setFormData({ 
-                        ...formData, 
-                        minimumOrderQuantity: value === '' ? '' : (parseInt(value) || 1)
-                      });
-                    }}
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Availability</label>
+                  <select
+                    value={formData.availability}
+                    onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
                     className="w-full px-4 py-2 border rounded-lg"
-                  />
+                  >
+                    <option value="in-stock">In Stock</option>
+                    <option value="out-of-stock">Out of Stock</option>
+                    <option value="pre-order">Pre-Order</option>
+                  </select>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Supply Region</label>
-                  <input
-                    type="text"
-                    value={formData.supplyRegion}
-                    onChange={(e) => setFormData({ ...formData, supplyRegion: e.target.value })}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  />
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Certifications</label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {formData.certifications.map((cert, idx) => (
+                      <span key={idx} className="bg-gray-100 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                        {cert}
+                        <button
+                          type="button"
+                          onClick={() => removeArrayItem('certifications', idx)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => addArrayItem('certifications')}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  >
+                    + Add Certification
+                  </button>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Features</label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {formData.features.map((feature, idx) => (
+                      <span key={idx} className="bg-gray-100 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                        {feature}
+                        <button
+                          type="button"
+                          onClick={() => removeArrayItem('features', idx)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => addArrayItem('features')}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  >
+                    + Add Feature
+                  </button>
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Tags</label>
+                  <div className="flex flex-wrap gap-2 mb-2">
+                    {formData.tags.map((tag, idx) => (
+                      <span key={idx} className="bg-gray-100 px-3 py-1 rounded-full text-sm flex items-center gap-2">
+                        {tag}
+                        <button
+                          type="button"
+                          onClick={() => removeArrayItem('tags', idx)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => addArrayItem('tags')}
+                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300"
+                  >
+                    + Add Tag
+                  </button>
                 </div>
                 <div className="col-span-2">
                   <label className="block text-sm font-medium text-gray-700 mb-2">Images</label>
@@ -495,3 +554,4 @@ export default function AdminEcoMaterials() {
     </div>
   );
 }
+

@@ -9,6 +9,8 @@ export const ADMIN_DASHBOARD_PATH = '/1sd3-hash';
 export const ADMIN_ECO_HOME_PATH = `${ADMIN_DASHBOARD_PATH}/eco-home`;
 export const ADMIN_ECO_INDUSTRIES_PATH = `${ADMIN_DASHBOARD_PATH}/eco-industries`;
 export const ADMIN_ECO_MATERIALS_PATH = `${ADMIN_DASHBOARD_PATH}/eco-materials`;
+export const ADMIN_MACHINES_PATH = `${ADMIN_DASHBOARD_PATH}/machines`;
+export const ADMIN_SOFTWARE_PATH = `${ADMIN_DASHBOARD_PATH}/software`;
 export const ADMIN_ECO_REQUESTS_PATH = `${ADMIN_DASHBOARD_PATH}/eco-requests`;
 export const ADMIN_CONTACT_MESSAGES_PATH = `${ADMIN_DASHBOARD_PATH}/contact-messages`;
 

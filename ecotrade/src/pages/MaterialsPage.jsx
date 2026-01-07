@@ -153,7 +153,7 @@ export default function MaterialsPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="mb-6 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-800 mb-3 sm:mb-4 leading-tight">
-            PCR Materials Catalog
+            Materials Catalog
           </h1>
           <form onSubmit={handleSearch} className="mb-4 sm:mb-6 flex flex-col md:flex-row gap-3">
             <input
