@@ -15,6 +15,8 @@ import EcoIndustriesPage from "./pages/EcoIndustriesPage";
 import MaterialsPage from "./pages/MaterialsPage";
 import CatalogPage from "./pages/CatalogPage";
 import MaterialDetailPage from "./pages/MaterialDetailPage";
+import MachineDetailPage from "./pages/MachineDetailPage";
+import SoftwareDetailPage from "./pages/SoftwareDetailPage";
 import RequestConfirmationPage from "./pages/RequestConfirmationPage";
 import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
@@ -79,6 +81,8 @@ function EcoApp() {
               <Route path="/catalog" element={<CatalogPage />} />
               <Route path="/eco-materials" element={<MaterialsPage />} />
               <Route path="/eco-materials/:id" element={<MaterialDetailPage />} />
+              <Route path="/machines/:id" element={<MachineDetailPage />} />
+              <Route path="/software/:id" element={<SoftwareDetailPage />} />
               <Route path="/request-confirmation/:requestId" element={<RequestConfirmationPage />} />
 
               {/* Admin Login Route - Protected with Secret (Encrypted Path) */}

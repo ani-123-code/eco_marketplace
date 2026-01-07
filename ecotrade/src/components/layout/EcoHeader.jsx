@@ -47,15 +47,18 @@ export default function EcoHeader() {
 
           <div className="hidden lg:flex items-center space-x-6">
             <nav className="flex items-center space-x-6 xl:space-x-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="text-sm xl:text-base text-gray-700 hover:text-green-600 font-medium transition"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              <Link
+                to="/eco-home"
+                className="text-sm xl:text-base text-gray-700 hover:text-green-600 font-medium transition"
+              >
+                Home
+              </Link>
+              <Link
+                to="/eco-industries"
+                className="text-sm xl:text-base text-gray-700 hover:text-green-600 font-medium transition"
+              >
+                Industries
+              </Link>
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setCatalogDropdownOpen(!catalogDropdownOpen)}
@@ -79,6 +82,15 @@ export default function EcoHeader() {
                   </div>
                 )}
               </div>
+              {navLinks.slice(2).map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="text-sm xl:text-base text-gray-700 hover:text-green-600 font-medium transition"
+                >
+                  {link.label}
+                </Link>
+              ))}
             </nav>
             <button
               onClick={() => setShowSellerModal(true)}
@@ -101,16 +113,20 @@ export default function EcoHeader() {
         {mobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-gray-200">
             <nav className="flex flex-col space-y-2 sm:space-y-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className="text-sm sm:text-base text-gray-700 hover:text-green-600 font-medium transition py-2 px-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
+              <Link
+                to="/eco-home"
+                className="text-sm sm:text-base text-gray-700 hover:text-green-600 font-medium transition py-2 px-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                to="/eco-industries"
+                className="text-sm sm:text-base text-gray-700 hover:text-green-600 font-medium transition py-2 px-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Industries
+              </Link>
               <div className="px-2 py-2">
                 <div className="text-sm sm:text-base font-semibold text-gray-700 mb-2">Catalog</div>
                 <div className="pl-4 space-y-2">
@@ -126,6 +142,16 @@ export default function EcoHeader() {
                   ))}
                 </div>
               </div>
+              {navLinks.slice(2).map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className="text-sm sm:text-base text-gray-700 hover:text-green-600 font-medium transition py-2 px-2"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              ))}
               <button
                 onClick={() => {
                   setShowSellerModal(true);

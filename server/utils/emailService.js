@@ -316,6 +316,204 @@ const emailTemplates = {
         Powered by EcoDispose
       `
     };
+  },
+
+  machineRequest: (data) => {
+    const { buyerName, companyName, machineName, machineCode, buyerEmail, buyerMobile, countryCode, specifications } = data;
+    
+    return {
+      subject: `Machine Request Received - ${machineCode} | Eco Marketplace`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .info-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #3b82f6; }
+            .info-row { margin: 10px 0; }
+            .label { font-weight: bold; color: #4b5563; }
+            .value { color: #111827; }
+            .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Machine Request Received</h1>
+              <p>Eco Marketplace</p>
+            </div>
+            <div class="content">
+              <p>Dear ${buyerName},</p>
+              
+              <p>Thank you for your interest in our industrial machines. We have received your request and our team will review it shortly.</p>
+              
+              <div class="info-box">
+                <h3 style="margin-top: 0; color: #3b82f6;">Request Details</h3>
+                <div class="info-row">
+                  <span class="label">Request ID:</span>
+                  <span class="value">${data.requestId || 'Processing...'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Machine:</span>
+                  <span class="value">${machineName} (${machineCode})</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Company:</span>
+                  <span class="value">${companyName}</span>
+                </div>
+                ${buyerEmail ? `<div class="info-row"><span class="label">Email:</span><span class="value">${buyerEmail}</span></div>` : ''}
+                ${buyerMobile ? `<div class="info-row"><span class="label">Mobile:</span><span class="value">${countryCode} ${buyerMobile}</span></div>` : ''}
+                ${specifications ? `<div class="info-row"><span class="label">Additional Specifications:</span><span class="value">${specifications}</span></div>` : ''}
+              </div>
+              
+              <p><strong>What happens next?</strong></p>
+              <ul>
+                <li>Our team will review your request within 24 hours</li>
+                <li>We'll provide detailed information about the machine, pricing, and availability</li>
+                <li>We can arrange a demo or trial if needed</li>
+                <li>Our team will coordinate delivery and installation support</li>
+              </ul>
+              
+              <p>If you have any questions, please don't hesitate to contact us at <a href="mailto:sales@ecodispose.com">sales@ecodispose.com</a> or call us at +91 88610 09443.</p>
+              
+              <p>Best regards,<br>
+              <strong>Eco Marketplace Team</strong><br>
+              Powered by EcoDispose</p>
+            </div>
+            <div class="footer">
+              <p>This is an automated email. Please do not reply directly to this message.</p>
+              <p>&copy; ${new Date().getFullYear()} Eco Marketplace. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Machine Request Received - Eco Marketplace
+        
+        Dear ${buyerName},
+        
+        Thank you for your interest in our industrial machines. We have received your request.
+        
+        Request Details:
+        - Machine: ${machineName} (${machineCode})
+        - Company: ${companyName}
+        ${buyerEmail ? `- Email: ${buyerEmail}` : ''}
+        ${buyerMobile ? `- Mobile: ${countryCode} ${buyerMobile}` : ''}
+        ${specifications ? `- Specifications: ${specifications}` : ''}
+        
+        Our team will review your request within 24 hours and provide detailed information.
+        
+        For questions, contact us at sales@ecodispose.com or +91 88610 09443.
+        
+        Best regards,
+        Eco Marketplace Team
+        Powered by EcoDispose
+      `
+    };
+  },
+
+  softwareRequest: (data) => {
+    const { buyerName, companyName, softwareName, softwareCode, buyerEmail, buyerMobile, countryCode, specifications } = data;
+    
+    return {
+      subject: `Software Request Received - ${softwareCode} | Eco Marketplace`,
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .info-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #8b5cf6; }
+            .info-row { margin: 10px 0; }
+            .label { font-weight: bold; color: #4b5563; }
+            .value { color: #111827; }
+            .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>Software Request Received</h1>
+              <p>Eco Marketplace</p>
+            </div>
+            <div class="content">
+              <p>Dear ${buyerName},</p>
+              
+              <p>Thank you for your interest in our business software solutions. We have received your request and our team will review it shortly.</p>
+              
+              <div class="info-box">
+                <h3 style="margin-top: 0; color: #8b5cf6;">Request Details</h3>
+                <div class="info-row">
+                  <span class="label">Request ID:</span>
+                  <span class="value">${data.requestId || 'Processing...'}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Software:</span>
+                  <span class="value">${softwareName} (${softwareCode})</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Company:</span>
+                  <span class="value">${companyName}</span>
+                </div>
+                ${buyerEmail ? `<div class="info-row"><span class="label">Email:</span><span class="value">${buyerEmail}</span></div>` : ''}
+                ${buyerMobile ? `<div class="info-row"><span class="label">Mobile:</span><span class="value">${countryCode} ${buyerMobile}</span></div>` : ''}
+                ${specifications ? `<div class="info-row"><span class="label">Additional Specifications:</span><span class="value">${specifications}</span></div>` : ''}
+              </div>
+              
+              <p><strong>What happens next?</strong></p>
+              <ul>
+                <li>Our team will review your request within 24 hours</li>
+                <li>We'll provide detailed information about the software, features, and licensing options</li>
+                <li>We can arrange a demo or trial period if available</li>
+                <li>Our team will assist with installation and setup support</li>
+              </ul>
+              
+              <p>If you have any questions, please don't hesitate to contact us at <a href="mailto:sales@ecodispose.com">sales@ecodispose.com</a> or call us at +91 88610 09443.</p>
+              
+              <p>Best regards,<br>
+              <strong>Eco Marketplace Team</strong><br>
+              Powered by EcoDispose</p>
+            </div>
+            <div class="footer">
+              <p>This is an automated email. Please do not reply directly to this message.</p>
+              <p>&copy; ${new Date().getFullYear()} Eco Marketplace. All rights reserved.</p>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+      text: `
+        Software Request Received - Eco Marketplace
+        
+        Dear ${buyerName},
+        
+        Thank you for your interest in our business software solutions. We have received your request.
+        
+        Request Details:
+        - Software: ${softwareName} (${softwareCode})
+        - Company: ${companyName}
+        ${buyerEmail ? `- Email: ${buyerEmail}` : ''}
+        ${buyerMobile ? `- Mobile: ${countryCode} ${buyerMobile}` : ''}
+        ${specifications ? `- Specifications: ${specifications}` : ''}
+        
+        Our team will review your request within 24 hours and provide detailed information.
+        
+        For questions, contact us at sales@ecodispose.com or +91 88610 09443.
+        
+        Best regards,
+        Eco Marketplace Team
+        Powered by EcoDispose
+      `
+    };
   }
 };
 
