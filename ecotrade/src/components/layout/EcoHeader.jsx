@@ -1,19 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, Store } from 'lucide-react';
+import { Menu, X, Store, ChevronDown } from 'lucide-react';
 import BecomeSellerModal from '../modals/BecomeSellerModal';
 
 export default function EcoHeader() {
   const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showSellerModal, setShowSellerModal] = useState(false);
+  const [catalogDropdownOpen, setCatalogDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setCatalogDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const navLinks = [
     { to: '/eco-home', label: 'Home' },
     { to: '/eco-industries', label: 'Industries' },
-    { to: '/eco-materials', label: 'Materials' },
     { to: '/about', label: 'About' },
     { to: '/contact', label: 'Contact' }
+  ];
+
+  const catalogItems = [
+    { to: '/catalog?type=materials', label: 'Materials' },
+    { to: '/catalog?type=machines', label: 'Machines' },
+    { to: '/catalog?type=software', label: 'Software' }
   ];
 
   return (
@@ -39,6 +56,29 @@ export default function EcoHeader() {
                   {link.label}
                 </Link>
               ))}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  onClick={() => setCatalogDropdownOpen(!catalogDropdownOpen)}
+                  className="flex items-center gap-1 text-sm xl:text-base text-gray-700 hover:text-green-600 font-medium transition"
+                >
+                  Catalog
+                  <ChevronDown className={`w-4 h-4 transition-transform ${catalogDropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {catalogDropdownOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-2 z-50">
+                    {catalogItems.map((item) => (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={() => setCatalogDropdownOpen(false)}
+                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-green-50 hover:text-green-600 transition"
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             </nav>
             <button
               onClick={() => setShowSellerModal(true)}
@@ -71,6 +111,21 @@ export default function EcoHeader() {
                   {link.label}
                 </Link>
               ))}
+              <div className="px-2 py-2">
+                <div className="text-sm sm:text-base font-semibold text-gray-700 mb-2">Catalog</div>
+                <div className="pl-4 space-y-2">
+                  {catalogItems.map((item) => (
+                    <Link
+                      key={item.to}
+                      to={item.to}
+                      className="block text-sm sm:text-base text-gray-600 hover:text-green-600 font-medium transition py-1"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
               <button
                 onClick={() => {
                   setShowSellerModal(true);

@@ -69,10 +69,10 @@ export default function EcoHomePage() {
               One Place for All Your Business Needs
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-4 md:mb-6 lg:mb-8 leading-tight font-sans text-white drop-shadow-lg">
-              Materials, Machines & Software - All in One Place
+              Your Complete Business Solution Platform
             </h1>
             <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 lg:mb-10 text-white max-w-3xl mx-auto leading-relaxed font-light drop-shadow-lg">
-              Your comprehensive B2B marketplace connecting industries with verified suppliers of materials, industrial machines, and business software. Streamline your procurement process, discover quality-certified products, and accelerate your business growth—all from one unified platform.
+              Discover everything your business needs in one place: premium materials for production, industrial machines for operations, and business software for efficiency. Connect with verified suppliers, compare products, request quotes, and streamline your entire procurement process—all from our unified B2B marketplace platform.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
               <Link
@@ -220,6 +220,103 @@ export default function EcoHomePage() {
               Start Sourcing Now
               <span>→</span>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-white to-gray-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10 sm:mb-12 md:mb-16">
+            <p className="text-xs sm:text-sm uppercase tracking-wide text-green-600 font-semibold mb-2 sm:mb-3">
+              What We Offer
+            </p>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4 leading-tight">
+              Materials, Machines & Software - Everything You Need
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Our platform provides comprehensive solutions across three key categories to meet all your business requirements
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-6xl mx-auto mb-12">
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-md hover:shadow-xl transition-shadow border border-gray-100">
+              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mb-4 sm:mb-6">
+                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Materials</h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4">
+                Source premium materials for your production needs. From raw materials to processed components, find quality-certified supplies with detailed specifications, availability tracking, and supplier verification.
+              </p>
+              <ul className="space-y-2 text-xs sm:text-sm text-gray-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 mt-0.5">•</span>
+                  <span>Raw materials & components</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 mt-0.5">•</span>
+                  <span>Quality certifications</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-green-600 mt-0.5">•</span>
+                  <span>Real-time inventory</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-md hover:shadow-xl transition-shadow border border-gray-100">
+              <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center mb-4 sm:mb-6">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Machines</h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4">
+                Find industrial machinery and equipment for your operations. Browse verified machines with detailed specifications, manufacturer information, pricing, and availability. Compare options and request demos.
+              </p>
+              <ul className="space-y-2 text-xs sm:text-sm text-gray-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">•</span>
+                  <span>Industrial equipment</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">•</span>
+                  <span>Manufacturer details</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-blue-600 mt-0.5">•</span>
+                  <span>Demo & trial options</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-md hover:shadow-xl transition-shadow border border-gray-100">
+              <div className="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center mb-4 sm:mb-6">
+                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">Software</h3>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-4">
+                Discover business software solutions to enhance your operations. From management systems to specialized tools, find software with detailed features, system requirements, licensing options, and developer information.
+              </p>
+              <ul className="space-y-2 text-xs sm:text-sm text-gray-600">
+                <li className="flex items-start gap-2">
+                  <span className="text-purple-600 mt-0.5">•</span>
+                  <span>Business management tools</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-purple-600 mt-0.5">•</span>
+                  <span>Multiple license types</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-purple-600 mt-0.5">•</span>
+                  <span>Feature comparisons</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>

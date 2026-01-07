@@ -13,6 +13,7 @@ import EcoFooter from "./components/layout/EcoFooter";
 import EcoHomePage from "./pages/EcoHomePage";
 import EcoIndustriesPage from "./pages/EcoIndustriesPage";
 import MaterialsPage from "./pages/MaterialsPage";
+import CatalogPage from "./pages/CatalogPage";
 import MaterialDetailPage from "./pages/MaterialDetailPage";
 import RequestConfirmationPage from "./pages/RequestConfirmationPage";
 import AboutPage from "./pages/AboutPage";
@@ -75,6 +76,7 @@ function EcoApp() {
               <Route path="/eco-industries" element={<EcoIndustriesPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/catalog" element={<CatalogPage />} />
               <Route path="/eco-materials" element={<MaterialsPage />} />
               <Route path="/eco-materials/:id" element={<MaterialDetailPage />} />
               <Route path="/request-confirmation/:requestId" element={<RequestConfirmationPage />} />
