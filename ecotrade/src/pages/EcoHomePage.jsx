@@ -55,7 +55,7 @@ export default function EcoHomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Inter', sans-serif" }}>
-      <section className="relative text-white py-16 md:py-24 lg:py-32 overflow-hidden min-h-[500px] md:min-h-[600px] lg:min-h-[700px] flex items-center">
+      <section className="relative text-white py-8 md:py-12 lg:py-16 overflow-hidden min-h-[350px] md:min-h-[400px] lg:min-h-[450px] flex items-center">
         <div className="absolute inset-0">
           <img
             src="/image_febeff64.PNG"
@@ -64,26 +64,26 @@ export default function EcoHomePage() {
           />
         </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="max-w-5xl mx-auto text-center">
-            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-white font-semibold mb-4 md:mb-6 animate-fade-in drop-shadow-lg">
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-xs sm:text-sm uppercase tracking-[0.2em] text-white font-semibold mb-2 md:mb-3 animate-fade-in drop-shadow-lg">
               One Place for All Your Business Needs
             </p>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold mb-4 md:mb-6 lg:mb-8 leading-tight text-white drop-shadow-lg">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-semibold mb-3 md:mb-4 leading-tight text-white drop-shadow-lg">
               Your Complete Business Solution Platform
             </h1>
-            <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 md:mb-8 lg:mb-10 text-white max-w-3xl mx-auto leading-relaxed font-light drop-shadow-lg">
+            <p className="text-sm sm:text-base md:text-lg mb-4 md:mb-5 text-white max-w-2xl mx-auto leading-relaxed font-light drop-shadow-lg">
               Discover everything your business needs in one place: premium materials for production, industrial machines for operations, and business software for efficiency. Connect with verified suppliers, compare products, request quotes, and streamline your entire procurement process—all from our unified B2B marketplace platform.
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center items-center">
               <Link
                 to="/eco-industries"
-                className="bg-white text-green-600 px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-green-50 transition-all shadow-lg text-sm sm:text-base w-full sm:w-auto"
+                className="bg-white text-green-600 px-5 sm:px-6 py-2 sm:py-2.5 rounded-lg font-semibold hover:bg-green-50 transition-all shadow-lg text-sm w-full sm:w-auto"
               >
                 Explore Industries
               </Link>
               <Link
-                to="/eco-materials"
-                className="bg-green-800 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-green-900 transition-all border-2 border-green-100 text-sm sm:text-base w-full sm:w-auto"
+                to="/catalog?type=materials"
+                className="bg-green-800 text-white px-5 sm:px-6 py-2 sm:py-2.5 rounded-lg font-semibold hover:bg-green-900 transition-all border-2 border-green-100 text-sm w-full sm:w-auto"
               >
                 Browse Materials
               </Link>
