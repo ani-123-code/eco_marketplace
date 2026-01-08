@@ -55,7 +55,7 @@ export default function EcoHomePage() {
 
   return (
     <div className="min-h-screen bg-gray-50" style={{ fontFamily: "'Inter', sans-serif" }}>
-      <section className="relative text-white py-8 md:py-12 lg:py-16 overflow-hidden min-h-[350px] md:min-h-[400px] lg:min-h-[450px] flex items-center">
+      <section className="relative text-white py-12 md:py-16 lg:py-20 overflow-hidden min-h-[450px] md:min-h-[500px] lg:min-h-[600px] flex items-center">
         <div className="absolute inset-0">
           <img
             src="/image_febeff64.PNG"
