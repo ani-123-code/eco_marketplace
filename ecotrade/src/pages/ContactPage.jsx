@@ -60,10 +60,10 @@ export default function ContactPage() {
               Get In Touch
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 leading-tight">
-              Connect With Our PCR Sourcing Specialists
+              Connect With Our Business Solutions Team
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-green-100 leading-relaxed">
-              Share your material requirements and sustainability objectives. Our team will curate qualified suppliers, technical documentation, and certified samples tailored to your exact specifications.
+              Whether you need materials for production, machines for operations, or software for business management, our team is here to help. Share your requirements and objectives, and we'll connect you with verified suppliers, provide technical documentation, and facilitate the entire procurement process.
             </p>
           </div>
         </div>
@@ -165,7 +165,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1">
-                    Material Requirements & Objectives *
+                    Your Requirements & Objectives *
                   </label>
                   <textarea
                     name="message"
@@ -173,7 +173,7 @@ export default function ContactPage() {
                     onChange={handleChange}
                     rows={5}
                     className="w-full px-4 py-2.5 sm:py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 text-sm sm:text-base"
-                    placeholder="Please describe your PCR material requirements, target volumes, quality specifications, delivery timelines, and sustainability objectives..."
+                    placeholder="Please describe your requirements (materials, machines, or software), target volumes, quality specifications, delivery timelines, budget, and any specific objectives..."
                     required
                   />
                 </div>

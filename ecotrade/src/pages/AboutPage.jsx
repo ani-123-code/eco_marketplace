@@ -49,13 +49,13 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl">
             <p className="uppercase text-xs sm:text-sm tracking-[0.35em] text-green-200 font-semibold mb-2 sm:mb-3">
-              About Eco Marketplace
+              About One Place
             </p>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6 leading-tight">
-              One Place for Materials, Machines & Software
+              Your Complete Business Solution Platform
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-green-100 leading-relaxed">
-              Eco Marketplace is your comprehensive B2B platform connecting businesses with verified suppliers of materials, industrial machines, and business software. We simplify procurement, ensure quality, and accelerate business growth—all from one unified marketplace.
+              One Place (Eco Marketplace) is your comprehensive B2B marketplace connecting businesses with verified suppliers of premium materials, industrial machines, and business software. We simplify procurement, ensure quality, and accelerate business growth—all from one unified platform. Discover everything your business needs in one place.
             </p>
           </div>
         </div>
@@ -105,7 +105,7 @@ export default function AboutPage() {
               <p className="text-green-300 text-xs sm:text-sm uppercase tracking-widest mb-3 sm:mb-4">Platform Impact</p>
               <h3 className="text-2xl sm:text-3xl font-bold mb-3 sm:mb-4 leading-tight">500+ Products Across Materials, Machines & Software</h3>
               <p className="text-sm sm:text-base text-gray-200 leading-relaxed mb-4 sm:mb-6">
-                Businesses across industries trust Eco Marketplace to streamline their procurement processes. Our integrated platform provides comprehensive visibility—from product discovery and supplier verification to quote management, order tracking, and quality assurance. We enable businesses to source everything they need in one place, saving time and reducing complexity.
+                Businesses across industries trust One Place (Eco Marketplace) to streamline their procurement processes. Our integrated platform provides comprehensive visibility—from product discovery and supplier verification to quote management, order tracking, and quality assurance. We enable businesses to source materials, machines, and software all in one place, saving time and reducing complexity.
               </p>
               <div className="mt-4 sm:mt-6 grid grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-white/10 rounded-xl p-3 sm:p-4">
