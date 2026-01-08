@@ -58,10 +58,11 @@ export default function EcoHomePage() {
       <section className="relative text-white py-12 md:py-16 lg:py-20 overflow-hidden min-h-[450px] md:min-h-[500px] lg:min-h-[600px] flex items-center">
         <div className="absolute inset-0">
           <img
-            src="/image_febeff64.PNG"
+            src="/mage_jstjv0jstjv0jstj.png"
             alt="Sustainable Recycling"
             className="w-full h-full object-cover"
           />
+          <div className="absolute inset-0 bg-black/50"></div>
         </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
